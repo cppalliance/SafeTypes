@@ -10,6 +10,7 @@ These are incredibly important undertakings in light of the US Government's reco
 Another source of errors in pass:[C++] come from the behavior of arithmetic.
 It is legal to compare a signed integer to an unsigned integer yet the resulting behavior can be unexpected.
 Take for example: -99 < 340282366920938463463374607431768211408. This should obviously evaluate to `true`, but it is in fact `false` because these values are bitwise equal (as unsigned 128-bit integers).
+The goal is to avoid this situation entirely by offering compile-time as well as runtime type safety guarantees much like the primitive types in Rust [10] do.
 
 == Boost.SafeTypes
 
@@ -39,6 +40,8 @@ Each of these types will have the following properties:
 . No operators defined between Boost.SafeTypes and builtin numeric types except for explicit, and non-narrowing construction
 . Any numerical error such as overflow will `throw` on error by default.
 . An `std::string_view` constructor and user-defined literals for easy and correct construction
+
+These types offer alternatives to all the standard numerical types in pass:[C++] as well as the often requested 128-bit integer types.
 
 === Provide Options for Runtime Behavior
 
@@ -130,6 +133,11 @@ catch(const std::exception & e)
 
 Moving the errors from run time to compile time should be far easier to debug, and lead to fewer instances where exceptions are possible.
 
+=== Intel Safe Arithmetic
+
+Boost.SafeTypes offers to provide a smaller set of features (e.g. no arbitrary precision arithmetic) with greater interoperability with the STL.
+This library [11] is also in active development.
+
 === Existing Compiler Flags and Sanitizers
 
 GCC, Clang, and other offer "-Wsign-conversion",  "-Wconversion", and "-Wfloat-equal" can be used today to avoid large classes of bugs, and we highly recommend their use.
@@ -153,3 +161,5 @@ By offering solid performance, an expansive standard library, and readable compi
 . https://github.com/boostorg/safe_numerics/tree/develop
 . https://doc.rust-lang.org/std/primitive.u32.html
 . https://bannalia.blogspot.com/2025/11/some-experiments-with-boostunordered-on.html
+. https://doc.rust-lang.org/std/#primitives
+. https://github.com/intel/safe-arithmetic
