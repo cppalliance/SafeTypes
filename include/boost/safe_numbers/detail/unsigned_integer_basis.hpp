@@ -37,11 +37,20 @@ public:
 
     explicit constexpr operator BasisType() const { return basis_; }
 
+    friend constexpr auto operator<=>(unsigned_integer_basis lhs, unsigned_integer_basis rhs) noexcept;
+
     friend constexpr auto operator+(unsigned_integer_basis lhs, unsigned_integer_basis rhs);
 
     template <typename LHSBasis, typename RHSBasis>
     friend constexpr auto operator+(unsigned_integer_basis<LHSBasis> lhs, unsigned_integer_basis<RHSBasis> rhs);
 };
+
+template <typename BasisType>
+[[nodiscard]] constexpr auto operator<=>(const unsigned_integer_basis<BasisType> lhs,
+                                         const unsigned_integer_basis<BasisType> rhs) noexcept
+{
+    return lhs.basis_ <=> rhs.basis_;
+}
 
 template <typename BasisType>
 [[nodiscard]] constexpr auto operator+(const unsigned_integer_basis<BasisType> lhs,
