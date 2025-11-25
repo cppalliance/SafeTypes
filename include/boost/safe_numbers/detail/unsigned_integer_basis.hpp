@@ -25,6 +25,8 @@ private:
 public:
 
     explicit constexpr unsigned_integer_basis(const BasisType val) : basis_{val} {}
+
+    explicit constexpr operator BasisType() const { return basis_; }
 };
 
 } // namespace boost::safe_numbers::detail
