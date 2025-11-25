@@ -1,4 +1,4 @@
-= Boost.SafeTypes: A Proposal
+= Boost.SafeNumbers: A Proposal
 Matt Borland <matt@mattborland.come>
 :toc:
 :icons: font
@@ -12,14 +12,14 @@ It is legal to compare a signed integer to an unsigned integer yet the resulting
 Take for example: -99 < 340282366920938463463374607431768211408. This should obviously evaluate to `true`, but it is in fact `false` because these values are bitwise equal (as unsigned 128-bit integers).
 The goal is to avoid this situation entirely by offering compile-time as well as runtime type safety guarantees much like the primitive types in Rust [10] do.
 
-== Boost.SafeTypes
+== Boost.SafeNumbers
 
 [quote,u/RoyBellingan[3]]
 ____
 I do not want to see any longer a bool became an int.
 ____
 
-The aim of Boost.SafeTypes is to be used as a complete replacement for the builtin numeric types of pass:[C++].
+The aim of Boost.SafeNumbers is to be used as a complete replacement for the builtin numeric types of pass:[C++].
 We have several goals that align with this desire.
 
 == Goals
@@ -31,15 +31,14 @@ The concrete types the library will provide are:
 . Unsigned Integers: u8, u16, u32, u64, and u128
 . Signed Integers: i8, i16, i32, i64, and i128
 . Floating Point: f32 and f64
+. Bool: boolean
 
 Each of these types will have the following properties:
 
-. No implicit "Truthiness"
-. No implicit narrowing
+. No implicit conversions (to include to boolean values)
 . No mixed sign operations
-. No operators defined between Boost.SafeTypes and builtin numeric types except for explicit, and non-narrowing construction
+. No operators defined between Boost.SafeNumbers and builtin numeric types except for explicit, and non-narrowing construction
 . Any numerical error such as overflow will `throw` on error by default.
-. An `std::string_view` constructor and user-defined literals for easy and correct construction
 
 These types offer alternatives to all the standard numerical types in pass:[C++] as well as the often requested 128-bit integer types.
 
@@ -111,7 +110,7 @@ std::cout << "error detected:" << e.what() << std::endl;
 
 This example when using our proposal would instead look something like:
 
-.An annotated version of the Example 1 except using Boost.SafeTypes instead
+.An annotated version of the Example 1 except using Boost.SafeNumbers instead
 ====
 [source, c++]
 ----
@@ -135,19 +134,19 @@ Moving the errors from run time to compile time should be far easier to debug, a
 
 === Intel Safe Arithmetic
 
-Boost.SafeTypes offers to provide a smaller set of features (e.g. no arbitrary precision arithmetic) with greater interoperability with the STL.
+Boost.SafeNumbers offers to provide a smaller set of features (e.g. no arbitrary precision arithmetic) with greater interoperability with the STL.
 This library [11] is also in active development.
 
 === Existing Compiler Flags and Sanitizers
 
 GCC, Clang, and other offer "-Wsign-conversion",  "-Wconversion", and "-Wfloat-equal" can be used today to avoid large classes of bugs, and we highly recommend their use.
 These flags along with UBSan will catch large classes of bugs.
-Boost.SaftTypes aims to take this a step further in rigidity of rules.
-For example, UBSan will allow rollover of an unsigned integer, whereas by default Boost.SaftTypes will throw.
+Boost.SafeNumbers aims to take this a step further in rigidity of rules.
+For example, UBSan will allow rollover of an unsigned integer, whereas by default Boost.SafeNumbers will throw.
 
 == Conclusion
 
-In conclusion, Boost.SafeTypes aims to offer a library level solution to issues of arithmetic safety in pass:[C++].
+In conclusion, Boost.SafeNumbers aims to offer a library level solution to issues of arithmetic safety in pass:[C++].
 By offering solid performance, an expansive standard library, and readable compiler errors it should be viewed as an acceptable alternative to the built-in types and STL.
 
 == Sources
