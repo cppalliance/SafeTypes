@@ -1,0 +1,14 @@
+// Copyright 2025 Matt Borland
+// Distributed under the Boost Software License, Version 1.0.
+// https://www.boost.org/LICENSE_1_0.txt
+
+#ifndef BOOST_SAFENUMBERS_CONFIG_HPP
+#define BOOST_SAFENUMBERS_CONFIG_HPP
+
+#ifdef BOOST_SAFE_NUMBERS_BUILD_MODULE
+#  define BOOST_SAFE_NUMBERS_EXPORT export
+#else
+#  define BOOST_SAFE_NUMBERS_EXPORT
+#endif
+
+#endif // BOOST_SAFENUMBERS_CONFIG_HPP

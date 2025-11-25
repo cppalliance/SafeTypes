@@ -5,6 +5,7 @@
 #ifndef BOOST_SAFE_NUMBERS_UNSIGNED_INTEGERS_HPP
 #define BOOST_SAFE_NUMBERS_UNSIGNED_INTEGERS_HPP
 
+#include <boost/safe_numbers/detail/config.hpp>
 #include <boost/safe_numbers/detail/unsigned_integer_basis.hpp>
 
 #ifndef BOOST_SAFE_NUMBERS_BUILD_MODULE
@@ -15,7 +16,7 @@
 
 namespace boost::safe_numbers {
 
-using u32 = detail::unsigned_integer_basis<std::uint32_t>;
+BOOST_SAFE_NUMBERS_EXPORT using u32 = detail::unsigned_integer_basis<std::uint32_t>;
 
 } // namespace boost::safe_numbers
 

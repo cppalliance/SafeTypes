@@ -5,7 +5,11 @@
 #include <boost/safe_numbers/unsigned_integers.hpp>
 #include <boost/core/lightweight_test.hpp>
 
-#ifndef BOOST_SAFE_NUMBERS_BUILD_MODULE
+#ifdef BOOST_SAFE_NUMBERS_BUILD_MODULE
+
+import boost.safe_numbers;
+
+#else
 
 #include <random>
 #include <cstring>
