@@ -17,6 +17,7 @@
 namespace boost::safe_numbers {
 
 BOOST_SAFE_NUMBERS_EXPORT using u32 = detail::unsigned_integer_basis<std::uint32_t>;
+BOOST_SAFE_NUMBERS_EXPORT using u64 = detail::unsigned_integer_basis<std::uint64_t>;
 
 } // namespace boost::safe_numbers
 
