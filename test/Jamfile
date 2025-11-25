@@ -44,7 +44,9 @@ project : requirements
     <toolset>clang:<warnings-as-errors>on
     <toolset>gcc:<warnings-as-errors>on
 
-  [ requires cxx14_decltype_auto cxx14_generic_lambdas cxx14_return_type_deduction cxx14_variable_templates cxx14_constexpr ]
+  [ requires cxx17_hdr_charconv cxx20_hdr_bit cxx20_hdr_compare cxx20_hdr_concepts cxx20_hdr_format ]
   ;
 
 run quick.cpp ;
+
+run test_construct_unsigned_type.cpp ;
