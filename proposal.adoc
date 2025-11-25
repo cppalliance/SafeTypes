@@ -117,7 +117,7 @@ This example when using our proposal would instead look something like:
 
 try
 {
-    using namespace boost::safetypes;
+    using namespace boost::safenumbers;
     i8 x = INT_MAX; // Compile error: implicit narrowing is not allowed
     i8 y = 2;       // Compile error: implicit narrowing is not allowed
     i8 z = x + y;   // Good since x and y are both of type i8
