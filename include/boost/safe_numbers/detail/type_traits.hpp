@@ -35,7 +35,10 @@ concept library_type = is_library_type_v<T>;
 namespace impl {
 
 template <typename T>
-struct underlying;
+struct underlying
+{
+    using type = std::remove_cv_t<std::remove_reference_t<T>>;
+};
 
 template <typename T>
 struct underlying<unsigned_integer_basis<T>>
