@@ -13,6 +13,8 @@
 #include <concepts>
 #include <compare>
 #include <limits>
+#include <stdexcept>
+#include <cstdint>
 
 #endif // BOOST_SAFE_NUMBERS_BUILD_MODULE
 
@@ -36,22 +38,11 @@ public:
 
     explicit constexpr unsigned_integer_basis(const BasisType val) : basis_{val} {}
 
-    explicit constexpr operator BasisType() const { return basis_; }
+    [[nodiscard]] explicit constexpr operator BasisType() const { return basis_; }
 
-    friend constexpr auto operator<=>(unsigned_integer_basis lhs, unsigned_integer_basis rhs) noexcept -> std::strong_ordering;
-
-    friend constexpr auto operator+(unsigned_integer_basis lhs, unsigned_integer_basis rhs) -> unsigned_integer_basis;
-
-    template <typename LHSBasis, typename RHSBasis>
-    friend constexpr auto operator+(unsigned_integer_basis<LHSBasis> lhs, unsigned_integer_basis<RHSBasis> rhs);
+    [[nodiscard]] friend constexpr auto operator<=>(unsigned_integer_basis lhs, unsigned_integer_basis rhs) noexcept
+        -> std::strong_ordering = default;
 };
-
-template <typename BasisType>
-[[nodiscard]] constexpr auto operator<=>(const unsigned_integer_basis<BasisType> lhs,
-                                         const unsigned_integer_basis<BasisType> rhs) noexcept
-{
-    return lhs.basis_ <=> rhs.basis_;
-}
 
 namespace impl {
 
@@ -94,26 +85,30 @@ template <typename BasisType>
 [[nodiscard]] constexpr auto operator+(const unsigned_integer_basis<BasisType> lhs,
                                        const unsigned_integer_basis<BasisType> rhs) -> unsigned_integer_basis<BasisType>
 {
+    using result_type = unsigned_integer_basis<BasisType>;
+
     #if BOOST_SAFE_NUMBERS_HAS_BUILTIN(__builtin_add_overflow)
 
     if (!std::is_constant_evaluated())
     {
         BasisType res;
-        const bool overflow_detected {impl::intrin_add(lhs.basis_, rhs.basis_, res)};
+        if (impl::intrin_add(static_cast<BasisType>(lhs), static_cast<BasisType>(rhs), res))
+        {
+            BOOST_THROW_EXCEPTION(std::overflow_error("Overflow detected in unsigned addition"));
+        }
 
-        return overflow_detected ? BOOST_THROW_EXCEPTION(std::overflow_error("Overflow detected in unsigned addition")) :
-                                   unsigned_integer_basis<BasisType>(res);
+        return result_type{res};
     }
 
     #endif // __has_builtin(__builtin_add_overflow)
 
-    const auto res {lhs.basis_ + rhs.basis_};
-    if (res < lhs.basis_)
+    const auto res {static_cast<BasisType>(lhs) + static_cast<BasisType>(rhs)};
+    if (res < static_cast<BasisType>(lhs))
     {
         BOOST_THROW_EXCEPTION(std::overflow_error("Overflow detected in unsigned addition"));
     }
 
-    return unsigned_integer_basis<BasisType>(res);
+    return result_type{res};
 }
 
 template <typename LHSBasis, typename RHSBasis>
@@ -126,19 +121,18 @@ constexpr auto operator+(const unsigned_integer_basis<LHSBasis>,
         if constexpr (std::is_same_v<RHSBasis, std::uint64_t>)
         {
             static_assert(false, "Can not perform addition between u32 and u64");
-            return unsigned_integer_basis<RHSBasis>(0);
         }
         else
         {
             static_assert(false, "Can not perform addition between u32 and unknown type");
-            return unsigned_integer_basis<RHSBasis>(0);
         }
     }
     else
     {
         static_assert(false, "Can not perform addition on mixed width unsigned integer types");
-        return unsigned_integer_basis<RHSBasis>(0);
     }
+
+    return unsigned_integer_basis<LHSBasis>(0);
 }
 
 } // namespace boost::safe_numbers::detail
