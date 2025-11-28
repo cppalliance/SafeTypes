@@ -37,6 +37,9 @@ public:
 
     [[nodiscard]] friend constexpr auto operator<=>(unsigned_integer_basis lhs, unsigned_integer_basis rhs) noexcept
         -> std::strong_ordering = default;
+
+    template <std::unsigned_integral OtherBasis>
+    constexpr auto operator+=(unsigned_integer_basis<OtherBasis> rhs) noexcept -> unsigned_integer_basis&;
 };
 
 namespace impl {
@@ -232,6 +235,15 @@ constexpr auto operator+(const unsigned_integer_basis<LHSBasis>,
     }
 
     return unsigned_integer_basis<LHSBasis>(0);
+}
+
+template <std::unsigned_integral BasisType>
+template <std::unsigned_integral OtherBasisType>
+constexpr auto unsigned_integer_basis<BasisType>::operator+=(const unsigned_integer_basis<OtherBasisType> rhs) noexcept
+    -> unsigned_integer_basis&
+{
+    *this = *this + rhs;
+    return *this;
 }
 
 } // namespace boost::safe_numbers::detail
